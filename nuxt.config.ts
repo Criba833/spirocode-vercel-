@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   app: {
     head: {
-      title: "Nuxt-template",
+      title: "SpiroCode",
     },
   },
 
