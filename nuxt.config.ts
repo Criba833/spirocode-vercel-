@@ -3,6 +3,10 @@ export default defineNuxtConfig({
   compatibilityDate: "2026-03-21",
   devtools: { enabled: true },
 
+  alias: {
+    "@": "/",
+  },
+
   app: {
     head: {
       title: "SpiroCode",

@@ -1,24 +1,22 @@
 <script setup lang="ts">
-withDefaults(defineProps<{
-  title?: string
-  subtitle?: string
-  description?: string
-  bigText?: string
-}>(), {
-  title: "Pensamos en sistemas. Construimos para escalar.",
-  subtitle: "No somos una agencia digital.",
-  description: "Somos un equipo senior que combina consultoría tecnológica y desarrollo de producto para resolver desafíos operativos complejos.",
-  bigText: "Diseñamos sistemas para crecer.",
-})
+withDefaults(
+  defineProps<{
+    title?: string;
+    subtitle?: string;
+    description?: string;
+  }>(),
+  {
+    title: "Pensamos en sistemas. Construimos para escalar.",
+    subtitle: "No somos una agencia digital.",
+    description:
+      "Somos un equipo senior que combina consultoría tecnológica y desarrollo de producto para resolver desafíos operativos complejos.",
+    bigText: "Diseñamos sistemas para crecer.",
+  },
+);
 </script>
 
 <template>
   <div class="about">
-    <SectionsBigTextSection
-      :text="bigText"
-      text-color="dark"
-      background-image="/svg/world-svg.svg"
-    />
     <LayoutSection background="secondary" class="about__content">
       <LayoutContainer>
         <div class="about__grid">

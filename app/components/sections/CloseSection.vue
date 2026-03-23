@@ -1,11 +1,15 @@
 <script setup lang="ts">
-withDefaults(defineProps<{
-  title?: string
-  subtitle?: string
-}>(), {
-  title: "Si la tecnología es un factor clave para la evolución de tu empresa, probablemente deberíamos聊聊.",
-  subtitle: "Tu software debe generar ventaja competitiva.",
-})
+withDefaults(
+  defineProps<{
+    title?: string;
+    subtitle?: string;
+  }>(),
+  {
+    title:
+      "Si la tecnología es un factor clave para la evolución de tu empresa, probablemente deberíamos聊聊.",
+    subtitle: "Tu software debe generar ventaja competitiva.",
+  },
+);
 </script>
 
 <template>
@@ -29,7 +33,6 @@ withDefaults(defineProps<{
     </LayoutContainer>
   </LayoutSection>
 </template>
-
 <style scoped>
 .close {
   padding-block: 5rem;

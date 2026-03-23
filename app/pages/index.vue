@@ -6,9 +6,14 @@
   <div class="home">
     <NavNavbar />
     <SectionsHeroSection />
-    <SectionsBrandsSection />
     <SectionsProblemSection />
+    <SectionsBrandsSection />
     <SectionsAboutSection />
+    <SectionsBigTextSection
+      :text="'Diseñamos sistemas para crecer.'"
+      text-color="dark"
+      background-image="@/public/image/world.svg"
+    />
     <SectionsServicesSection />
     <SectionsHowWeDoSection />
     <SectionsTechSection />

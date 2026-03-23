@@ -2,52 +2,51 @@
 const clients = [
   {
     title: "Startups B2B en crecimiento",
-    description: "Equipos que necesitan construir productos tecnológicos sólidos desde el inicio.",
+    description:
+      "Equipos que necesitan construir productos tecnológicos sólidos desde el inicio.",
     icon: "i-ph-rocket-launch",
   },
   {
     title: "Equipos que modernizan",
-    description: "Empresas que necesitan evolucionar sistemas legacy hacia arquitecturas modernas.",
+    description:
+      "Empresas que necesitan evolucionar sistemas legacy hacia arquitecturas modernas.",
     icon: "i-ph-arrows-clockwise",
   },
   {
     title: "Empresas que automatizan",
-    description: "Organizaciones que quieren eliminar procesos manuales, reducir fricción operativa.",
+    description:
+      "Organizaciones que quieren eliminar procesos manuales, reducir fricción operativa.",
     icon: "i-ph-gear",
   },
   {
     title: "Operaciones con fricción",
-    description: "Negocios donde la tecnología actual está frenando la eficiencia.",
+    description:
+      "Negocios donde la tecnología actual está frenando la eficiencia.",
     icon: "i-ph-warning-circle",
   },
-]
+];
 </script>
 
 <template>
   <div class="tech">
-    <SectionsBigTextSection
-      text="Tecnología"
-      text-color="light"
-    />
     <LayoutSection background="default" class="tech__content">
       <LayoutContainer>
         <div class="tech__header">
           <p class="tech__intro">
-            No desarrollamos software por horas. Diseñamos sistemas que sostienen el crecimiento del negocio.
+            No desarrollamos software por horas. Diseñamos sistemas que
+            sostienen el crecimiento del negocio.
           </p>
           <div class="tech__header-row">
             <h2 class="tech__title">
               Trabajamos con organizaciones que entienden que
             </h2>
-            <span class="tech__accent-text">la tecnología define su crecimiento.</span>
+            <span class="tech__accent-text"
+              >la tecnología define su crecimiento.</span
+            >
           </div>
         </div>
         <div class="tech__grid">
-          <div
-            v-for="client in clients"
-            :key="client.title"
-            class="tech__card"
-          >
+          <div v-for="client in clients" :key="client.title" class="tech__card">
             <div class="tech__card-icon">
               <div :class="client.icon" />
             </div>

@@ -14,7 +14,16 @@ import {
 } from "./utils/design-tokens";
 
 export default defineConfig({
-  presets: [presetUno(), presetAttributify(), presetIcons()],
+  presets: [
+    presetUno(),
+    presetAttributify(),
+    presetIcons({
+      collections: {
+        "simple-icons": () =>
+          import("@iconify-json/simple-icons").then((i) => i.icons),
+      },
+    }),
+  ],
 
   theme: {
     colors,
