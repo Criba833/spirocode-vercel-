@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ref, onMounted, onUnmounted } from "vue";
 
 withDefaults(
@@ -22,10 +20,12 @@ const titleRef = ref<HTMLElement>();
 const descriptionRef = ref<HTMLElement>();
 const actionsRef = ref<HTMLElement>();
 
-let tl: gsap.core.Timeline | null = null;
+let tl: any = null;
 
-onMounted(() => {
-  // Register plugin when component mounts (client-side only)
+onMounted(async () => {
+  // Import GSAP dynamically - only runs on client
+  const { gsap } = await import("gsap");
+  const { ScrollTrigger } = await import("gsap/ScrollTrigger");
   gsap.registerPlugin(ScrollTrigger);
 
   // Animations only run in browser/mounted state

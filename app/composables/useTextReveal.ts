@@ -2,8 +2,6 @@
 // Word-split text reveal animation triggered on scroll
 // Splits text into words, animates each from blurry/transparent to clear/focused
 import { onMounted, onUnmounted } from "vue";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Ref } from "vue";
 
 export interface TextRevealOptions {
@@ -55,9 +53,14 @@ export function useTextReveal(
   options: TextRevealOptions = {},
 ) {
   const mergedOptions = { ...defaultOptions, ...options };
+  let ScrollTriggerRef: any = null;
 
-  onMounted(() => {
-    // Register plugin when component mounts (client-side only)
+  onMounted(async () => {
+    // Import GSAP dynamically - only runs on client
+    const { gsap } = await import("gsap");
+    const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+    ScrollTriggerRef = ScrollTrigger;
+    
     gsap.registerPlugin(ScrollTrigger);
 
     if (!el.value) return;
@@ -116,14 +119,13 @@ export function useTextReveal(
 
   onUnmounted(() => {
     // Clean up all ScrollTriggers for this element and all GSAP animations
-    if (el.value) {
-      ScrollTrigger.getAll().forEach((t) => {
+    if (el.value && ScrollTriggerRef) {
+      ScrollTriggerRef.getAll().forEach((t: any) => {
         if (t.vars.trigger === el.value) {
           t.kill();
         }
       });
     }
-    gsap.killAll();
   });
 }
 

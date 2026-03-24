@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ref, onMounted, onUnmounted } from "vue";
 
 defineProps<{
@@ -11,11 +9,13 @@ defineProps<{
 
 const root = ref<HTMLElement>();
 const trackRef = ref<HTMLElement>();
-let marqueeTween: gsap.core.Tween | null = null;
+let marqueeTween: any = null;
 let scrollTimeout: number | null = null;
 
-onMounted(() => {
-  // Register plugin when component mounts (client-side only)
+onMounted(async () => {
+  // Import GSAP dynamically - only runs on client
+  const { gsap } = await import("gsap");
+  const { ScrollTrigger } = await import("gsap/ScrollTrigger");
   gsap.registerPlugin(ScrollTrigger);
 
   if (!trackRef.value) return;
