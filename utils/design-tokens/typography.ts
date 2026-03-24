@@ -5,4 +5,7 @@ export const fontSize = {
   lg: "clamp(1.125rem, 1rem + 0.5vw, 1.25rem)",
   xl: "clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem)",
   "2xl": "clamp(1.5rem, 1.3rem + 0.8vw, 2rem)",
+  "3xl": "clamp(2rem, 1.6rem + 1.5vw, 2.5rem)",
+  "4xl": "clamp(2.5rem, 2rem + 2vw, 3.5rem)",
+  "5xl": "clamp(3rem, 2.4rem + 2.5vw, 4.5rem)",
 };

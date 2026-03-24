@@ -5,20 +5,33 @@
 <template>
   <div class="home">
     <NavNavbar />
-    <SectionsHeroSection />
-    <SectionsProblemSection />
-    <SectionsBrandsSection />
-    <SectionsAboutSection />
-    <SectionsBigTextSection
+    <SectionsHero />
+    <SectionsBigText
       :text="'Diseñamos sistemas para crecer.'"
       text-color="dark"
-      background-image="@/public/image/world.svg"
+      background-image=""
     />
-    <SectionsServicesSection />
-    <SectionsHowWeDoSection />
-    <SectionsTechSection />
-    <SectionsCloseSection />
-    <SectionsFooterSection />
+
+    <SectionsProblem />
+    <SectionsBrands />
+    <SectionsAbout />
+
+    <SectionsServices />
+
+    <SectionsBigText
+      text="Como lo hacemos"
+      text-color="dark"
+      background-image="/svg/world.svg"
+    />
+    <SectionsHowWeDo />
+    <UiDivider />
+    <SectionsTech />
+    <UiDivider
+      text="Si la tecnología es un factor clave para la evolución de tu empresa, probablemente podamos ayudarte."
+      size="lg"
+    />
+    <SectionsClose />
+    <SectionsFooter />
   </div>
 </template>
 

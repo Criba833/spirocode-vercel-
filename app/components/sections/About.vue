@@ -16,18 +16,17 @@ withDefaults(
 </script>
 
 <template>
-  <div class="about">
-    <LayoutSection background="secondary" class="about__content">
+  <LayoutSection size="lg" background="gradient" class="about">
       <LayoutContainer>
         <div class="about__grid">
-          <div class="about__col-1">
+          <div class="about__col">
             <img
               src="/image/svg-world-tech-icons.svg"
               alt="Tecnología"
               class="about__image"
             />
           </div>
-          <div class="about__col-2">
+          <div class="about__col">
             <h2 class="about__title">
               {{ title }}
             </h2>
@@ -41,14 +40,9 @@ withDefaults(
         </div>
       </LayoutContainer>
     </LayoutSection>
-  </div>
 </template>
 
 <style scoped>
-.about__content {
-  padding-block: 5rem;
-}
-
 .about__grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -63,6 +57,12 @@ withDefaults(
   }
 }
 
+.about__col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .about__image {
   width: 100%;
   max-width: 551px;
@@ -70,18 +70,12 @@ withDefaults(
   opacity: 0.8;
 }
 
-.about__col-2 {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
 .about__title {
-  font-family: "Qualy", serif;
+  font-family: var(--font-heading);
   font-size: clamp(1.5rem, 3vw, 2.5rem);
   font-weight: 400;
   line-height: 1.2;
-  color: #d9d9d9;
+  color: var(--color-text-light);
 }
 
 .about__subtitle {
@@ -96,6 +90,6 @@ withDefaults(
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.6;
-  color: #d9d9d9;
+  color: var(--color-text-light);
 }
 </style>

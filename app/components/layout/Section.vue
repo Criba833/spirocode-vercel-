@@ -1,13 +1,20 @@
 <script setup lang="ts">
 defineProps<{
-  size?: "sm" | "md" | "lg" | "xl"
-  background?: "default" | "secondary" | "accent"
-  tag?: string
-}>()
+  size?: "sm" | "md" | "lg" | "xl";
+  background?: "default" | "secondary" | "accent" | "gradient";
+  tag?: string;
+}>();
 </script>
 
 <template>
-  <component :is="tag || 'section'" class="section" :class="[`section--${size || 'md'}`, `section--bg-${background || 'default'}`]">
+  <component
+    :is="tag || 'section'"
+    class="section"
+    :class="[
+      `section--${size || 'md'}`,
+      `section--bg-${background || 'default'}`,
+    ]"
+  >
     <slot />
   </component>
 </template>
@@ -54,5 +61,9 @@ defineProps<{
 
 .section--bg-accent {
   background-color: var(--color-accent);
+}
+
+.section--bg-gradient {
+  background: var(--color-gradient);
 }
 </style>

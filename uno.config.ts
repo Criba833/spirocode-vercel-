@@ -19,6 +19,7 @@ export default defineConfig({
     presetAttributify(),
     presetIcons({
       collections: {
+        ph: () => import("@iconify-json/ph").then((i) => i.icons),
         "simple-icons": () =>
           import("@iconify-json/simple-icons").then((i) => i.icons),
       },

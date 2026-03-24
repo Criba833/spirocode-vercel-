@@ -258,7 +258,7 @@ if (isClient) {
 ```bash
 # ✅ Correcto
 Button.vue
-HeroSection.vue
+Hero.vue
 NavBar.vue
 Container.vue
 
@@ -269,7 +269,90 @@ nav-bar.vue
 container.vue
 ```
 
-**Razón:** Nuxt auto-importa componentes basándose en el nombre del archivo. `HeroSection.vue` se importa como `<HeroSection>`, no `<hero-section>`.
+**Razón:** Nuxt auto-importa componentes basándose en el nombre del archivo. `Hero.vue` se importa como `<Hero>`, no `<hero>`.
+
+### Evitar Palabras Redundantes en Componentes
+
+**OBLIGATORIO:** 
+- NO usar sufijos como `Section`, `Component`, `Module` cuando la carpeta ya indica el tipo
+- Si el componente vive en `components/sections/`, el nombre debe ser `About.vue`, NO `AboutSection.vue`
+- Si el componente vive en `components/ui/`, el nombre debe ser `Button.vue`, NO `ButtonComponent.vue`
+
+**Ejemplos correctos:**
+```
+components/sections/About.vue     → <SectionsAbout />
+components/sections/Hero.vue       → <SectionsHero />
+components/ui/Button.vue           → <UiButton />
+components/layout/Container.vue    → <LayoutContainer />
+components/nav/Navbar.vue          → <NavNavbar />
+```
+
+**❌ Incorrecto (redundante):**
+```
+components/sections/AboutSection.vue     → <SectionsAboutSection />
+components/sections/HeroSection.vue       → <SectionsHeroSection />
+```
+
+**Razón:** Nuxt auto-importa basado en la ruta. `components/sections/About.vue` → `SectionsAbout`. Evitar redundancia como `SectionsAboutSection`.
+
+### CSS BEM Naming Convention
+
+**OBLIGATORIO:** Usar BEM (Block Element Modifier) para naming de clases CSS.
+
+**Estructura:**
+```css
+.block { }                    /* Block - componente raiz */
+.block__element { }           /* Element - parte del bloque */
+.block--modifier { }          /* Modifier - variant del bloque */
+.block__element--modifier { } /* Element con modifier */
+```
+
+**Ejemplos:**
+```css
+/* ✅ Correcto */
+.hero { }
+.hero__title { }
+.hero__description { }
+.hero__title--accent { }
+.hero__col { }
+.hero__col--left { }
+
+/* ❌ Incorrecto */
+.hero-title { }              /* Sin doble guion bajo */
+.heroTitle { }               /* camelCase en lugar de BEM */
+.hero-content { }           /* content no es nombre semantico */
+.hero-col-left { }           /* usar BEM modifier --left */
+```
+
+**Reglas semánticas:**
+- Usar nombres descriptivos: `title`, `subtitle`, `description`, `cta`, `grid`, `col`
+- NO usar nombres genéricos: `content`, `wrapper`, `container` (a menos que sea el layout)
+- Elements dentro de columns: usar `.block__col`, NO `.block__col-1`, `.block__col-2`
+- Para variants: usar `--accent`, `--left`, `--right`, etc.
+
+**Variables CSS:**
+- Usar variables CSS del sistema de diseño (`var(--color-text-light)`, NO `#d9d9d9`)
+- Usar fuentes del sistema (`var(--font-heading)`, `var(--font-primary)`)
+
+### Commits Git
+
+**OBLIGATORIO:** Cuando el usuario solicite hacer commit, ejecutar el ciclo completo de git:
+
+1. `git add -A` - Stage todos los cambios
+2. `git commit -m""` - Usar conventional commits (feat:, fix:, refactor:, etc.)
+3. `git push` - Push al remote
+
+**Formato de commit:**
+```
+feat: descripcion breve del cambio
+fix: correccion de bug
+refactor: reorganizacion de codigo
+docs: documentacion
+style: cambios de estilo
+test: cambios en tests
+```
+
+**Nota:** NO hacer commit parciales. Siempre hacer add de todos los cambios relevantes.
 
 ---
 

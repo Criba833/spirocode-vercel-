@@ -84,6 +84,7 @@ const currentYear = new Date().getFullYear()
 }
 
 .footer__link:hover {
-  color: #b8e600;
+  color: var(--color-accent);
+  opacity: 0.8;
 }
 </style>

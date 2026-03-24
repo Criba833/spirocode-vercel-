@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 withDefaults(
   defineProps<{
     title?: string;
@@ -11,12 +14,79 @@ withDefaults(
       "Somos una consultora tecnológica especializada en desarrollo web moderno y construcción de plataformas escalables. Diseñamos soluciones enfocadas en eficiencia operativa, integración real y crecimiento sostenible.",
   },
 );
+
+const root = ref<HTMLElement>();
+const bgRef = ref<HTMLElement>();
+const titleRef = ref<HTMLElement>();
+const descriptionRef = ref<HTMLElement>();
+const actionsRef = ref<HTMLElement>();
+
+onMounted(() => {
+  // Set initial state
+  gsap.set(bgRef.value, { opacity: 0, scale: 1.1 });
+  gsap.set(titleRef.value?.querySelectorAll(".hero__title-word"), {
+    opacity: 0,
+    y: 60,
+    filter: "blur(10px)",
+  });
+  gsap.set(descriptionRef.value, { opacity: 0, y: 30 });
+  gsap.set(actionsRef.value?.querySelectorAll(".hero__btn"), {
+    opacity: 0,
+    y: 20,
+    scale: 0.95,
+  });
+
+  // Build timeline
+  const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+  tl.to(bgRef.value, { opacity: 1, scale: 1, duration: 1.2 })
+    .to(
+      titleRef.value?.querySelectorAll(".hero__title-word"),
+      { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, stagger: 0.1 },
+      "-=0.4"
+    )
+    .to(descriptionRef.value, { opacity: 1, y: 0, duration: 0.8 }, "-=0.3")
+    .to(
+      actionsRef.value?.querySelectorAll(".hero__btn"),
+      { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.12 },
+      "-=0.4"
+    );
+
+  // Play on load
+  tl.play();
+
+  // Scroll - fade out when leaving, restart when coming back
+  ScrollTrigger.create({
+    trigger: root.value,
+    start: "top top",
+    end: "bottom top",
+    onLeave: () => {
+      gsap.to(root.value, { opacity: 0.5, duration: 0.5, ease: "power2.out" });
+    },
+    onEnterBack: () => {
+      tl.restart();
+      gsap.to(root.value, { opacity: 1, duration: 0.5, ease: "power2.out" });
+    },
+  });
+
+  // Parallax
+  gsap.to(bgRef.value, {
+    yPercent: 30,
+    ease: "none",
+    scrollTrigger: {
+      trigger: ".hero",
+      start: "top top",
+      end: "bottom top",
+      scrub: true,
+    },
+  });
+});
 </script>
 
 <template>
-  <section class="hero">
+  <section ref="root" class="hero">
     <!-- Background -->
-    <div class="hero__bg">
+    <div ref="bgRef" class="hero__bg">
       <img
         src="/image/bg-hero-img.png"
         alt=""
@@ -29,17 +99,23 @@ withDefaults(
     <!-- Content -->
     <LayoutContainer>
       <div class="hero__content">
-        <h1 class="hero__title">
-          {{ title }}
+        <h1 ref="titleRef" class="hero__title">
+          <span
+            v-for="(word, index) in title.split(' ')"
+            :key="index"
+            class="hero__title-word"
+          >
+            {{ word }}&nbsp;
+          </span>
         </h1>
-        <p class="hero__description">
+        <p ref="descriptionRef" class="hero__description">
           {{ description }}
         </p>
-        <div class="hero__actions">
-          <UiButton variant="primary" size="lg">
-            Agendar conversacion
+        <div ref="actionsRef" class="hero__actions">
+          <UiButton class="hero__btn" variant="primary" size="lg">
+            Agendar conversación
           </UiButton>
-          <UiButton variant="secondary" size="lg">
+          <UiButton class="hero__btn" variant="secondary" size="lg">
             Explorar soluciones
           </UiButton>
         </div>
@@ -98,20 +174,29 @@ withDefaults(
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
+  gap: 2rem;
   text-align: center;
   max-width: 1099px;
   margin-inline: auto;
 }
 
 .hero__title {
-  font-family: var(--font-primary);
+  font-family: var(--font-heading);
   font-size: clamp(1.75rem, 4vw, 2.5rem);
   font-weight: 900;
   line-height: 1.2;
-  color: #d9d9d9;
+  color: var(--color-text-light);
   letter-spacing: 0;
   max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 0.25em;
+}
+
+.hero__title-word {
+  display: inline-block;
+  will-change: transform, opacity, filter;
 }
 
 .hero__description {
@@ -119,7 +204,7 @@ withDefaults(
   font-size: 1.25rem;
   font-weight: 400;
   line-height: 1.4;
-  color: #d9d9d9;
+  color: var(--color-text-light);
   max-width: 100%;
 }
 
@@ -128,7 +213,7 @@ withDefaults(
   flex-wrap: wrap;
   justify-content: center;
   gap: 1.5rem;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
 /* ========================================

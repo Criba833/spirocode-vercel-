@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const brands = [
   { name: "PostgreSQL", icon: "i-simple-icons-postgresql" },
-  { name: "VSCode", icon: "i-simple-icons-vscode" },
+  // { name: "VSCode", icon: "i-simple-icons-vscode" },
   { name: "Figma", icon: "i-simple-icons-figma" },
   { name: "Docker", icon: "i-simple-icons-docker" },
   { name: "Vite", icon: "i-simple-icons-vite" },
@@ -24,7 +24,7 @@ const marqueeItems = [...brands, ...brands];
 </script>
 
 <template>
-  <LayoutSection background="default" class="brands">
+  <LayoutSection size="sm" background="default" class="brands">
     <LayoutContainer>
       <div class="brands__marquee-wrapper">
         <div class="brands__marquee">
@@ -44,9 +44,6 @@ const marqueeItems = [...brands, ...brands];
 
 <style scoped>
 .brands {
-  padding-block: 3rem;
-  /* border-top: 1px solid rgba(255, 255, 255, 0.05); */
-  /* border-bottom: 1px solid rgba(255, 255, 255, 0.05); */
   overflow: hidden;
 }
 
@@ -57,8 +54,8 @@ const marqueeItems = [...brands, ...brands];
 
 .brands__marquee {
   display: flex;
-  gap: 4rem;
-  animation: marquee 30s linear infinite;
+  gap: 8rem;
+  animation: marquee 64s linear infinite;
   width: max-content;
 }
 
@@ -93,6 +90,6 @@ const marqueeItems = [...brands, ...brands];
 .brands__icon {
   width: 48px;
   height: 48px;
-  color: #d9d9d9;
+  color: var(--color-text-light);
 }
 </style>

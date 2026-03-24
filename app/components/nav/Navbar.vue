@@ -1,13 +1,13 @@
 <script setup lang="ts">
-const route = useRoute()
+const route = useRoute();
 
 const navLinks = [
-  { label: "Features", href: "/features" },
-  { label: "Pricing", href: "/pricing" },
-  { label: "About", href: "/about" },
-]
+  { label: "Work", href: "/" },
+  { label: "Services", href: "/" },
+  { label: "About Us", href: "/about" },
+];
 
-const isActive = (href: string) => route.path === href
+const isActive = (href: string) => route.path === href;
 </script>
 
 <template>
@@ -36,16 +36,13 @@ const isActive = (href: string) => route.path === href
           >
             {{ link.label }}
           </NuxtLink>
+          <NavLanguageToggle />
         </div>
 
         <!-- CTA Buttons -->
         <div class="navbar__actions">
-          <UiButton variant="ghost" size="sm">
-            Login
-          </UiButton>
-          <UiButton variant="primary" size="sm">
-            Sign up
-          </UiButton>
+          <!-- <UiButton variant="ghost" size="sm"> Login </UiButton> -->
+          <UiButton variant="primary" size="sm"> Leave a request </UiButton>
         </div>
 
         <!-- Mobile Menu Button -->
