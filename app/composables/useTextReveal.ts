@@ -6,6 +6,8 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Ref } from "vue";
 
+gsap.registerPlugin(ScrollTrigger);
+
 export interface TextRevealOptions {
   /** Delay between words (default: 0.05) */
   stagger?: number;
@@ -57,7 +59,7 @@ export function useTextReveal(
   const mergedOptions = { ...defaultOptions, ...options };
 
   onMounted(() => {
-    if (!el.value) return;
+    if (!process.client || !el.value) return;
 
     // Store original text to avoid double-processing
     const element = el.value;
@@ -112,7 +114,7 @@ export function useTextReveal(
   });
 
   onUnmounted(() => {
-    // Clean up all ScrollTriggers for this element
+    // Clean up all ScrollTriggers for this element and all GSAP animations
     if (el.value) {
       ScrollTrigger.getAll().forEach((t) => {
         if (t.vars.trigger === el.value) {
@@ -120,6 +122,7 @@ export function useTextReveal(
         }
       });
     }
+    gsap.killAll();
   });
 }
 

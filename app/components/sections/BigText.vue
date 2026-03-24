@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ref, onMounted, onUnmounted } from "vue";
+
+gsap.registerPlugin(ScrollTrigger);
 
 defineProps<{
   text: string;
@@ -11,95 +14,128 @@ defineProps<{
 const root = ref<HTMLElement>();
 const trackRef = ref<HTMLElement>();
 const textRefs = ref<HTMLElement[]>([]);
+let marqueeTween: gsap.core.Tween | null = null;
+let scrollTimeout: number | null = null;
 
 onMounted(() => {
-  if (!trackRef.value) return;
+  if (!process.client || !trackRef.value) return;
 
-  const track = trackRef.value;
-  const textElements = track.querySelectorAll(".big-text-section__text");
-  if (!textElements.length) return;
+  try {
+    const track = trackRef.value;
+    const textElements = track.querySelectorAll(".big-text-section__text");
+    if (!textElements.length) return;
 
-  const textWidth = (textElements[0] as HTMLElement).offsetWidth;
+    const textWidth = (textElements[0] as HTMLElement).offsetWidth;
 
-  // Set initial position - center text
-  gsap.set(track, { x: 0 });
+    // Set initial position - center text
+    gsap.set(track, { x: 0 });
 
-  // Faster infinite marquee - full page width movement
-  const moveDistance = textWidth + 200;
-  
-  const marqueeTween = gsap.to(track, {
-    x: -moveDistance,
-    duration: 30,
-    repeat: -1,
-    ease: "none",
-    paused: true,
-  });
+    // Faster infinite marquee - full page width movement
+    const moveDistance = textWidth + 200;
+    
+    marqueeTween = gsap.to(track, {
+      x: -moveDistance,
+      duration: 30,
+      repeat: -1,
+      ease: "none",
+      paused: true,
+    });
 
-  // Opacity animation based on scroll position
-  const textElementsArray = Array.from(textElements);
-  textElementsArray.forEach((el, i) => {
-    gsap.fromTo(
-      el,
-      { opacity: 0.3 },
-      {
-        opacity: 1,
-        duration: 0.5,
-        scrollTrigger: {
-          trigger: root.value,
-          start: "top bottom",
-          end: "center center",
-          scrub: true,
-        },
-      }
-    );
-  });
+    // Opacity animation based on scroll position
+    const textElementsArray = Array.from(textElements);
+    textElementsArray.forEach((el) => {
+      gsap.fromTo(
+        el,
+        { opacity: 0.3 },
+        {
+          opacity: 1,
+          duration: 0.5,
+          scrollTrigger: {
+            trigger: root.value,
+            start: "top bottom",
+            end: "center center",
+            scrub: true,
+          },
+        }
+      );
+    });
 
-  // Scroll-controlled speed and direction
-  let scrollVelocity = 0;
-  let lastScrollY = window.scrollY;
-  let direction = 1;
+    // Scroll-controlled speed and direction
+    let scrollVelocity = 0;
+    let lastScrollY = window.scrollY;
+    let direction = 1;
 
-  const updateDirection = () => {
-    const currentScrollY = window.scrollY;
-    direction = currentScrollY > lastScrollY ? 1 : -1;
-    lastScrollY = currentScrollY;
-  };
+    const updateDirection = () => {
+      const currentScrollY = window.scrollY;
+      direction = currentScrollY > lastScrollY ? 1 : -1;
+      lastScrollY = currentScrollY;
+    };
 
-  ScrollTrigger.create({
-    trigger: root.value,
-    start: "top bottom",
-    end: "bottom top",
-    onUpdate: () => {
-      if (!marqueeTween.isActive()) {
-        marqueeTween.play();
-      }
+    ScrollTrigger.create({
+      trigger: root.value,
+      start: "top bottom",
+      end: "bottom top",
+      onUpdate: () => {
+        if (marqueeTween && !marqueeTween.isActive()) {
+          marqueeTween.play();
+        }
 
-      updateDirection();
-      scrollVelocity = Math.abs(window.scrollY - lastScrollY);
+        updateDirection();
+        scrollVelocity = Math.abs(window.scrollY - lastScrollY);
 
-      // Speed based on scroll velocity
-      const baseSpeed = 0.5;
-      const velocityBonus = Math.min(scrollVelocity * 0.03, 2);
-      const timeScale = direction === 1 
-        ? baseSpeed + velocityBonus 
-        : -(baseSpeed + velocityBonus);
+        // Speed based on scroll velocity
+        const baseSpeed = 0.5;
+        const velocityBonus = Math.min(scrollVelocity * 0.03, 2);
+        const timeScale = direction === 1 
+          ? baseSpeed + velocityBonus 
+          : -(baseSpeed + velocityBonus);
 
-      gsap.to(marqueeTween, { 
-        timeScale, 
-        overwrite: true,
-        duration: 0.2 
-      });
-    },
-  });
+        if (marqueeTween) {
+          gsap.to(marqueeTween, { 
+            timeScale, 
+            overwrite: true,
+            duration: 0.2 
+          });
+        }
+      },
+    });
 
-  // Reset speed when not scrolling
-  let scrollTimeout: number;
-  window.addEventListener("scroll", () => {
+    // Reset speed when not scrolling
+    const handleScroll = () => {
+      if (scrollTimeout !== null) clearTimeout(scrollTimeout);
+      scrollTimeout = window.setTimeout(() => {
+        if (marqueeTween) {
+          gsap.to(marqueeTween, { timeScale: 1, duration: 0.5 });
+        }
+      }, 100);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    // Store for cleanup
+    (window as any).__bigTextScrollHandler = handleScroll;
+  } catch (error) {
+    console.error("BigText animation error:", error);
+  }
+});
+
+onUnmounted(() => {
+  // Clean up animations and triggers
+  if (marqueeTween) {
+    marqueeTween.kill();
+  }
+  if (scrollTimeout !== null) {
     clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-      gsap.to(marqueeTween, { timeScale: 1, duration: 0.5 });
-    }, 100);
-  });
+  }
+  
+  const handler = (window as any).__bigTextScrollHandler;
+  if (handler) {
+    window.removeEventListener("scroll", handler);
+    delete (window as any).__bigTextScrollHandler;
+  }
+  
+  gsap.killAll();
+  ScrollTrigger.getAll().forEach(trigger => trigger.kill());
 });
 </script>
 

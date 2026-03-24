@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ref, onMounted, onUnmounted } from "vue";
+
+gsap.registerPlugin(ScrollTrigger);
 
 withDefaults(
   defineProps<{
@@ -21,65 +24,83 @@ const titleRef = ref<HTMLElement>();
 const descriptionRef = ref<HTMLElement>();
 const actionsRef = ref<HTMLElement>();
 
+let tl: gsap.core.Timeline | null = null;
+
 onMounted(() => {
-  // Set initial state
-  gsap.set(bgRef.value, { opacity: 0, scale: 1.1 });
-  gsap.set(titleRef.value?.querySelectorAll(".hero__title-word"), {
-    opacity: 0,
-    y: 60,
-    filter: "blur(10px)",
-  });
-  gsap.set(descriptionRef.value, { opacity: 0, y: 30 });
-  gsap.set(actionsRef.value?.querySelectorAll(".hero__btn"), {
-    opacity: 0,
-    y: 20,
-    scale: 0.95,
-  });
+  // Only run on client (double-check - .vue files are auto-imported as client)
+  if (!process.client) return;
 
-  // Build timeline
-  const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+  try {
+    // Set initial state
+    gsap.set(bgRef.value, { opacity: 0, scale: 1.1 });
+    gsap.set(titleRef.value?.querySelectorAll(".hero__title-word"), {
+      opacity: 0,
+      y: 60,
+      filter: "blur(10px)",
+    });
+    gsap.set(descriptionRef.value, { opacity: 0, y: 30 });
+    gsap.set(actionsRef.value?.querySelectorAll(".hero__btn"), {
+      opacity: 0,
+      y: 20,
+      scale: 0.95,
+    });
 
-  tl.to(bgRef.value, { opacity: 1, scale: 1, duration: 1.2 })
-    .to(
-      titleRef.value?.querySelectorAll(".hero__title-word"),
-      { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, stagger: 0.1 },
-      "-=0.4"
-    )
-    .to(descriptionRef.value, { opacity: 1, y: 0, duration: 0.8 }, "-=0.3")
-    .to(
-      actionsRef.value?.querySelectorAll(".hero__btn"),
-      { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.12 },
-      "-=0.4"
-    );
+    // Build timeline
+    tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-  // Play on load
-  tl.play();
+    tl.to(bgRef.value, { opacity: 1, scale: 1, duration: 1.2 })
+      .to(
+        titleRef.value?.querySelectorAll(".hero__title-word"),
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, stagger: 0.1 },
+        "-=0.4"
+      )
+      .to(descriptionRef.value, { opacity: 1, y: 0, duration: 0.8 }, "-=0.3")
+      .to(
+        actionsRef.value?.querySelectorAll(".hero__btn"),
+        { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.12 },
+        "-=0.4"
+      );
 
-  // Scroll - fade out when leaving, restart when coming back
-  ScrollTrigger.create({
-    trigger: root.value,
-    start: "top top",
-    end: "bottom top",
-    onLeave: () => {
-      gsap.to(root.value, { opacity: 0.5, duration: 0.5, ease: "power2.out" });
-    },
-    onEnterBack: () => {
-      tl.restart();
-      gsap.to(root.value, { opacity: 1, duration: 0.5, ease: "power2.out" });
-    },
-  });
+    // Play on load
+    tl.play();
 
-  // Parallax
-  gsap.to(bgRef.value, {
-    yPercent: 30,
-    ease: "none",
-    scrollTrigger: {
-      trigger: ".hero",
+    // Scroll - fade out when leaving, restart when coming back
+    ScrollTrigger.create({
+      trigger: root.value,
       start: "top top",
       end: "bottom top",
-      scrub: true,
-    },
-  });
+      onLeave: () => {
+        gsap.to(root.value, { opacity: 0.5, duration: 0.5, ease: "power2.out" });
+      },
+      onEnterBack: () => {
+        if (tl) tl.restart();
+        gsap.to(root.value, { opacity: 1, duration: 0.5, ease: "power2.out" });
+      },
+    });
+
+    // Parallax
+    gsap.to(bgRef.value, {
+      yPercent: 30,
+      ease: "none",
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+    });
+  } catch (error) {
+    console.error("Hero animation error:", error);
+  }
+});
+
+onUnmounted(() => {
+  // Clean up animations and triggers
+  if (tl) {
+    tl.kill();
+  }
+  gsap.killAll();
+  ScrollTrigger.getAll().forEach(trigger => trigger.kill());
 });
 </script>
 

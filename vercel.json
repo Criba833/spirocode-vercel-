@@ -1,0 +1,8 @@
+{
+  "buildCommand": "pnpm build",
+  "outputDirectory": ".output/public",
+  "public": "public",
+  "env": {
+    "NITRO_PRERENDER": "true"
+  }
+}

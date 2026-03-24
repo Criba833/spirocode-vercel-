@@ -22,3 +22,6 @@ logs
 .env
 .env.*
 !.env.example
+
+# Config with secrets
+opencode.json
