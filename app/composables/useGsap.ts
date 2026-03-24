@@ -22,7 +22,7 @@ export function useGsap(
   let ctx: ReturnType<typeof gsap.context> | null = null;
 
   onMounted(() => {
-    if (process.client && scope.value) {
+    if (scope.value) {
       ctx = gsap.context(() => fn(), scope.value ?? undefined);
     }
   });
@@ -32,7 +32,7 @@ export function useGsap(
       ctx.revert();
     }
     // Kill any remaining ScrollTriggers
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     // Kill all animations
     gsap.killAll();
   });
@@ -49,12 +49,12 @@ export function useGsapTimeline(
   vars?: { repeat?: number; yoyo?: boolean },
 ) {
   const tl = gsap.timeline(vars);
-  
+
   onUnmounted(() => {
     if (tl) {
       tl.kill();
     }
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   });
 
   return { tl, gsap, ScrollTrigger };

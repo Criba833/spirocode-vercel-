@@ -14,7 +14,7 @@ export default defineNuxtPlugin(() => {
 
     // Prevent ScrollTrigger batch timeout issues
     ScrollTrigger.batch(".scroll-trigger", {
-      onEnter: batch => batch.forEach(trigger => trigger.getPosition()),
+      onEnter: (batch) => batch.forEach((trigger) => trigger.getPosition()),
       interval: 100,
     });
   }

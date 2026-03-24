@@ -27,9 +27,7 @@ const actionsRef = ref<HTMLElement>();
 let tl: gsap.core.Timeline | null = null;
 
 onMounted(() => {
-  // Only run on client (double-check - .vue files are auto-imported as client)
-  if (!process.client) return;
-
+  // Animations only run in browser/mounted state
   try {
     // Set initial state
     gsap.set(bgRef.value, { opacity: 0, scale: 1.1 });
@@ -52,13 +50,13 @@ onMounted(() => {
       .to(
         titleRef.value?.querySelectorAll(".hero__title-word"),
         { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, stagger: 0.1 },
-        "-=0.4"
+        "-=0.4",
       )
       .to(descriptionRef.value, { opacity: 1, y: 0, duration: 0.8 }, "-=0.3")
       .to(
         actionsRef.value?.querySelectorAll(".hero__btn"),
         { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.12 },
-        "-=0.4"
+        "-=0.4",
       );
 
     // Play on load
@@ -70,7 +68,11 @@ onMounted(() => {
       start: "top top",
       end: "bottom top",
       onLeave: () => {
-        gsap.to(root.value, { opacity: 0.5, duration: 0.5, ease: "power2.out" });
+        gsap.to(root.value, {
+          opacity: 0.5,
+          duration: 0.5,
+          ease: "power2.out",
+        });
       },
       onEnterBack: () => {
         if (tl) tl.restart();
@@ -100,7 +102,7 @@ onUnmounted(() => {
     tl.kill();
   }
   gsap.killAll();
-  ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 });
 </script>
 

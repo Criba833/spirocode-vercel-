@@ -36,18 +36,18 @@ const defaultOptions: TextRevealOptions = {
 
 /**
  * useTextReveal
- * 
+ *
  * Splits element text into words and animates them in sequence on scroll.
  * Creates a professional word-by-word reveal effect.
- * 
+ *
  * @param el - Reference to the HTML element
  * @param options - Animation configuration options
- * 
+ *
  * @example
  * ```ts
  * const title = ref<HTMLElement>()
  * useTextReveal(title)
- * 
+ *
  * // Custom options
  * useTextReveal(title, { stagger: 0.1, duration: 1, y: 60 })
  * ```
@@ -59,7 +59,7 @@ export function useTextReveal(
   const mergedOptions = { ...defaultOptions, ...options };
 
   onMounted(() => {
-    if (!process.client || !el.value) return;
+    if (!el.value) return;
 
     // Store original text to avoid double-processing
     const element = el.value;
@@ -129,9 +129,9 @@ export function useTextReveal(
 // ─── Simplified version for quick usage ──────────────────────────────────────
 /**
  * useSimpleTextReveal
- * 
+ *
  * Quick text reveal without word splitting - fades entire element
- * 
+ *
  * @param el - Reference to the HTML element
  * @param options - Basic animation options
  */
@@ -162,7 +162,7 @@ export function useSimpleTextReveal(
           start: mergedOptions.start,
           toggleActions: mergedOptions.toggleActions,
         },
-      }
+      },
     );
   });
 

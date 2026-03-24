@@ -3,7 +3,13 @@
   "mcp": {
     "figma": {
       "type": "local",
-      "command": ["npx", "-y", "@jayarrowz/mcp-figma", "--figma-token", ""],
+      "command": [
+        "npx",
+        "-y",
+        "@jayarrowz/mcp-figma",
+        "--figma-token",
+        ""
+      ],
       "enabled": true
     }
   }

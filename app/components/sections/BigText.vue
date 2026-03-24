@@ -13,12 +13,11 @@ defineProps<{
 
 const root = ref<HTMLElement>();
 const trackRef = ref<HTMLElement>();
-const textRefs = ref<HTMLElement[]>([]);
 let marqueeTween: gsap.core.Tween | null = null;
 let scrollTimeout: number | null = null;
 
 onMounted(() => {
-  if (!process.client || !trackRef.value) return;
+  if (!trackRef.value) return;
 
   try {
     const track = trackRef.value;
@@ -32,7 +31,7 @@ onMounted(() => {
 
     // Faster infinite marquee - full page width movement
     const moveDistance = textWidth + 200;
-    
+
     marqueeTween = gsap.to(track, {
       x: -moveDistance,
       duration: 30,
@@ -56,7 +55,7 @@ onMounted(() => {
             end: "center center",
             scrub: true,
           },
-        }
+        },
       );
     });
 
@@ -86,15 +85,16 @@ onMounted(() => {
         // Speed based on scroll velocity
         const baseSpeed = 0.5;
         const velocityBonus = Math.min(scrollVelocity * 0.03, 2);
-        const timeScale = direction === 1 
-          ? baseSpeed + velocityBonus 
-          : -(baseSpeed + velocityBonus);
+        const timeScale =
+          direction === 1
+            ? baseSpeed + velocityBonus
+            : -(baseSpeed + velocityBonus);
 
         if (marqueeTween) {
-          gsap.to(marqueeTween, { 
-            timeScale, 
+          gsap.to(marqueeTween, {
+            timeScale,
             overwrite: true,
-            duration: 0.2 
+            duration: 0.2,
           });
         }
       },
@@ -127,15 +127,15 @@ onUnmounted(() => {
   if (scrollTimeout !== null) {
     clearTimeout(scrollTimeout);
   }
-  
+
   const handler = (window as any).__bigTextScrollHandler;
   if (handler) {
     window.removeEventListener("scroll", handler);
     delete (window as any).__bigTextScrollHandler;
   }
-  
+
   gsap.killAll();
-  ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 });
 </script>
 
