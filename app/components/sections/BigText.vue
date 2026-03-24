@@ -3,8 +3,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ref, onMounted, onUnmounted } from "vue";
 
-gsap.registerPlugin(ScrollTrigger);
-
 defineProps<{
   text: string;
   textColor?: "dark" | "light";
@@ -17,6 +15,9 @@ let marqueeTween: gsap.core.Tween | null = null;
 let scrollTimeout: number | null = null;
 
 onMounted(() => {
+  // Register plugin when component mounts (client-side only)
+  gsap.registerPlugin(ScrollTrigger);
+
   if (!trackRef.value) return;
 
   try {

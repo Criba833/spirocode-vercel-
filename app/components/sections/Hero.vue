@@ -3,8 +3,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ref, onMounted, onUnmounted } from "vue";
 
-gsap.registerPlugin(ScrollTrigger);
-
 withDefaults(
   defineProps<{
     title?: string;
@@ -27,6 +25,9 @@ const actionsRef = ref<HTMLElement>();
 let tl: gsap.core.Timeline | null = null;
 
 onMounted(() => {
+  // Register plugin when component mounts (client-side only)
+  gsap.registerPlugin(ScrollTrigger);
+
   // Animations only run in browser/mounted state
   try {
     // Set initial state

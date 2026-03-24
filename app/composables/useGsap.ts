@@ -5,8 +5,6 @@ import type { Ref } from "vue";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
-
 // ─── useGsap ──────────────────────────────────────────────────────────────────
 // Scoped GSAP context — auto cleans up ALL animations + ScrollTriggers
 // when the component unmounts. Prevents memory leaks.
@@ -22,6 +20,9 @@ export function useGsap(
   let ctx: ReturnType<typeof gsap.context> | null = null;
 
   onMounted(() => {
+    // Register plugin when component mounts (client-side only)
+    gsap.registerPlugin(ScrollTrigger);
+
     if (scope.value) {
       ctx = gsap.context(() => fn(), scope.value ?? undefined);
     }

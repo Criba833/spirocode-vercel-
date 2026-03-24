@@ -6,8 +6,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Ref } from "vue";
 
-gsap.registerPlugin(ScrollTrigger);
-
 export interface TextRevealOptions {
   /** Delay between words (default: 0.05) */
   stagger?: number;
@@ -59,6 +57,9 @@ export function useTextReveal(
   const mergedOptions = { ...defaultOptions, ...options };
 
   onMounted(() => {
+    // Register plugin when component mounts (client-side only)
+    gsap.registerPlugin(ScrollTrigger);
+
     if (!el.value) return;
 
     // Store original text to avoid double-processing
